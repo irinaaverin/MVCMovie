@@ -20,6 +20,7 @@ namespace MvcMovie
             //BuildWebHost(args).Run();
             //com 1
             //com 2
+            //com 11
             var host = BuildWebHost(args);
 
             using (var scope = host.Services.CreateScope())
