@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <AssemblyName>MVCMovie.IntegrationTests</AssemblyName>
+
+    <RootNamespace>MVCMovie.IntegrationTests</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Solves Problem#1 (binding error) https://github.com/Microsoft/vstest/issues/428. -->
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- Solves Problem#2 (404 when executing service calls hosted in other assemblies) -->
+  <!-- https://github.com/Microsoft/vstest/issues/196.-->
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- https://github.com/NuGet/Home/issues/4412. -->
+  <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+    <ItemGroup>
+      <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+    </ItemGroup>
+
+    <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+  </Target>
+   
+  <ItemGroup>
+    <Compile Remove="Collection.cs" />
+    <Compile Remove="MVCMoviesShould.cs" />
+    <Compile Remove="PingTests.cs" />
+    <Compile Remove="TestContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.3.1" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+
+    <!-- Required. Include this reference for coverage -->
+    <PackageReference Include="Microsoft.CodeCoverage" Version="1.0.3" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MvcMovie\MvcMovie.csproj" />
+  </ItemGroup>
+
+</Project>
