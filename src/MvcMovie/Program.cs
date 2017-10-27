@@ -18,6 +18,7 @@ namespace MvcMovie
         public static void Main(string[] args)
         {         
             //com1
+            //com2
             //BuildWebHost(args).Run();            
             var host = BuildWebHost(args);
 
